@@ -1,0 +1,10 @@
+# Exclude virtual environment files
+venv/
+env/
+.venv/
+env/
+*.pyc
+
+# Exclude pipenv files
+Pipfile
+Pipfile.lock
