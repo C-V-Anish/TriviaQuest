@@ -7,17 +7,16 @@ class ChoiceSerializer(serializers.ModelSerializer):
         fields = ['choice_text','is_correct']
 
 class QuizModelSerializer(serializers.ModelSerializer):
-    choices = ChoiceSerializer(many=True, read_only=True)
     class Meta:
         model = QuizModel
-        fields = '__all__'
+        fields = ["question","choices","startDate","endDate","active","result"]
 
     def create(self, validated_data):
-        options_data = validated_data.pop('options')
+        choices_data = validated_data.pop('choices')
         quiz = QuizModel.objects.create(**validated_data)
 
-        for option_data in options_data:
-            Choice.objects.create(quiz=quiz, **option_data)
+        for choice_data in choices_data:
+            Choice.objects.create(quiz=quiz, **choice_data)
 
         return quiz
     

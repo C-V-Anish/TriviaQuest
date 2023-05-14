@@ -23,11 +23,13 @@ class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
 class LoginView(GenericAPIView):
+    serializer_class = LoginSerializer
+
     def post(self,request):
         data = request.data
         username = data.get('username')
         password = data.get('password')
-        user = authenticate(request,username,password)
+        user = authenticate(username=username,password=password)
 
         if user:
             refresh = RefreshToken.for_user(user)
