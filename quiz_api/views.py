@@ -21,7 +21,7 @@ class ActiveQuiz(ListAPIView):
 
     def get_queryset(self):
         current_time = datetime.now()
-        return QuizModel.objects.filter(startDate=current_time,endData=current_time,is_active=True)
+        return QuizModel.objects.filter(active=True)
 
 class AllQuiz(ListAPIView):
     serializer_class =  QuizModelSerializer
