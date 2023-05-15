@@ -1,8 +1,8 @@
 # Exclude virtual environment files
 venv/
-env/
+.env
 .venv/
-env/
+.env
 *.pyc
 
 # Exclude pipenv files
