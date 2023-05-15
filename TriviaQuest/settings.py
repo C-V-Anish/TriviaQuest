@@ -41,12 +41,18 @@ INSTALLED_APPS = [
     'authentication',
     'quiz_api',
     'rest_framework_simplejwt',
+    'drf_spectacular',
 ]
 
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS':'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
+}
+
+SPECTACULAR_SETTINGS  = {
+    "TITLE":"TriviaQuest API",
 }
 
 SIMPLE_JWT = {

@@ -1,0 +1,260 @@
+openapi: 3.0.3
+info:
+  title: TriviaQuest API
+  version: 0.0.0
+paths:
+  /api/login/:
+    post:
+      operationId: api_login_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Login'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Login'
+          description: ''
+  /api/register/:
+    post:
+      operationId: api_register_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/token/:
+    post:
+      operationId: api_token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MyTokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MyTokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MyTokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyTokenObtainPair'
+          description: ''
+  /quizzes/:
+    post:
+      operationId: quizzes_create
+      tags:
+      - quizzes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuizModel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/QuizModel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/QuizModel'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuizModel'
+          description: ''
+  /quizzes/{id}/result/:
+    get:
+      operationId: quizzes_result_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - quizzes
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuizModel'
+          description: ''
+  /quizzes/active/:
+    get:
+      operationId: quizzes_active_list
+      tags:
+      - quizzes
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuizModel'
+          description: ''
+  /quizzes/all/:
+    get:
+      operationId: quizzes_all_list
+      tags:
+      - quizzes
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuizModel'
+          description: ''
+components:
+  schemas:
+    Choice:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        choice_text:
+          type: string
+          maxLength: 50
+        is_correct:
+          type: boolean
+      required:
+      - choice_text
+      - id
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+          maxLength: 32
+          minLength: 12
+        password:
+          type: string
+          writeOnly: true
+          minLength: 8
+      required:
+      - password
+      - username
+    MyTokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - password
+      - username
+    QuizModel:
+      type: object
+      properties:
+        question:
+          type: string
+          maxLength: 250
+        choices:
+          type: array
+          items:
+            $ref: '#/components/schemas/Choice'
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        active:
+          type: boolean
+        result:
+          type: string
+          nullable: true
+          maxLength: 10
+      required:
+      - choices
+      - endDate
+      - question
+      - startDate
+    User:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 20
+          minLength: 6
+        last_name:
+          type: string
+          maxLength: 20
+          minLength: 6
+        username:
+          type: string
+          minLength: 8
+        password:
+          type: string
+          writeOnly: true
+          minLength: 10
+      required:
+      - first_name
+      - last_name
+      - password
+      - username
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

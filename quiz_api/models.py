@@ -1,5 +1,6 @@
 from django.db import models
-from datetime import datetime
+from datetime import datetime,timedelta
+from django.utils import timezone
 
 # Create your models here.
 class QuizModel(models.Model):
@@ -8,7 +9,13 @@ class QuizModel(models.Model):
     startDate = models.DateTimeField()
     endDate = models.DateTimeField()
     active = models.BooleanField(default=False)
-    result = models.CharField(max_length=10)
+    result = models.CharField(max_length=10,null=True)
+
+    def is_result_available(self):
+        current_time = timezone.now()
+        result_available_time = self.endDate + timedelta(minutes=5)
+        return current_time >= result_available_time
+
 
     # def save(self, *args, **kwargs):
     #     if not self.id:  
