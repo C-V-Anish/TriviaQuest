@@ -28,8 +28,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-ALLOWED_HOSTS = ['triviaquest-production.up.railway.app','127.0.0.1','https://triviaquest-api.onrender.com/']
-CSRF_TRUSTED_ORIGINS = ['https://triviaquest-production.up.railway.app','https://triviaquest-api.onrender.com/']
+ALLOWED_HOSTS = ['triviaquest-production.up.railway.app','127.0.0.1','triviaquest-api.onrender.com/']
+CSRF_TRUSTED_ORIGINS = ['https://triviaquest-production.up.railway.app','triviaquest-api.onrender.com/']
 
 
 # Application definition
