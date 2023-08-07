@@ -52,7 +52,20 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS':'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day',  # 100 requests per day for anonymous clients
+        'user': '1000/day',  # 1000 requests per day for authenticated users
+        'custom': '10/hour',  # Custom throttle scope
+    },
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'triviaQuest_cache', 
+    }
 }
 
 SPECTACULAR_SETTINGS  = {

@@ -5,9 +5,12 @@ from rest_framework import permissions
 from .models import QuizModel
 from datetime import datetime,timezone
 from rest_framework.response import Response
+from rest_framework.throttling import UserRateThrottle
+from django.views.decorators.cache import cache_page
 # Create your views here.
 
 permission_classes=(permissions.IsAuthenticated,)
+
 
 class CreateQuiz(CreateAPIView):
     serializer_class =  QuizModelSerializer
@@ -19,7 +22,9 @@ class CreateQuiz(CreateAPIView):
 class ActiveQuiz(ListAPIView):
     serializer_class =  QuizModelSerializer
     permission_classes = permission_classes
+    throttle_classes = [UserRateThrottle]
 
+    @cache_page(60 * 5)
     def check_current_time(self):
         current_date = datetime.now().date()
         current_time = datetime.now().time()
@@ -43,19 +48,23 @@ class ActiveQuiz(ListAPIView):
 class AllQuiz(ListAPIView):
     serializer_class =  QuizModelSerializer
     permission_classes = permission_classes
+    throttle_classes = [UserRateThrottle]
 
+    @cache_page(60 * 5)
     def get_queryset(self):
         return QuizModel.objects.all()
     
 class ResultQuiz(RetrieveAPIView):
     serializer_class =  QuizModelSerializer
     permission_classes = permission_classes
+    throttle_classes = [UserRateThrottle]
 
     def get_queryset(self):
         quiz_id = self.kwargs['pk']
         quiz = QuizModel.objects.filter(id = quiz_id)
         return quiz
 
+    @cache_page(60 * 5)
     def retrieve(self, request, *args, **kwargs):
         quiz = self.get_object()
         return self.view_result(quiz)
